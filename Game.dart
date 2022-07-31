@@ -63,6 +63,7 @@ class _GameState extends State<Game> {
                 child: Text(questions[number_question].option_two)),
             ElevatedButton(
                 onPressed: () {},
+                
                 child: Text(questions[number_question].option_three))
           ],
         ),
