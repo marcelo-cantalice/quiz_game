@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -13,6 +15,7 @@ class Game extends StatefulWidget {
 
 class _GameState extends State<Game> {
   int number_question = 0;
+  int idQuestion = 0;
   List<Question> questions = [
     Question("How many legs does the Legs of Man have?", "One", "Three", "Four",
         "Three"),
@@ -36,52 +39,78 @@ class _GameState extends State<Game> {
         "Celsius", "Fahrenheit", "Kelvin", "Fahrenheit"),
   ];
   int correct_questions = 0;
-  Color initialButtonColor= Colors.blue;
+  Color initialButtonColor = Colors.blue;
 
   //Analyze if the answer is correct
   bool answerChecker(player_answer, correct_answer) {
-    questions[number_question].question_answered = true;
+    questions[idQuestion].question_answered = true;
+    number_question++;
     if (player_answer == correct_answer) {
       correct_questions++;
-      //change answer background(red for incorrect or green for correct)
+
       //Allow to go to the next question
       return true;
-    }else{
+    } else {
       return false;
     }
   }
 
   //Go to next question
-  nextQuestion(){
-    /*
-     setState(() {
-                          if (number_question < questions.length - 1) {
-                            print(number_question.toString() + "---");
-                            number_question++;
-                          } else if (number_question == questions.length - 1) {
-                            print("Don't have more questoins");
+  int getQuestion() {
+    Random random = new Random();
+    int value = random.nextInt(questions.length);
+    if (questions[value].question_answered == true) {
+      value = getQuestion();
+    }
+    return value;
+  }
 
-                            //Open final window
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Final_Screen(
-                                        correct_answers:
-                                            correct_questions.toString(),
-                                        length_question:
-                                            questions.length.toString(),
-                                      )),
-                            );
-                          }
-                        });
-     */
+  //Open Dialog
+  openDialog(bool checker) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Center(
+            child: checker ? Text('You' 're right!') : Text('You' 're wrong!')),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15))),
+        actions: <Widget>[
+          Center(
+            child: ElevatedButton(
+                child: (number_question < questions.length - 1)
+                    ? Text('Go to next question')
+                    : Text("Check the Final Score"),
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(15))))),
+                onPressed: () {
+                  if (number_question < questions.length - 1) {
+                    setState(() {
+                      idQuestion = getQuestion();
+                      Navigator.pop(context);
+                    });
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Final_Screen(
+                                correct_answers: correct_questions.toString(),
+                                length_question: questions.length.toString(),
+                              )),
+                    );
+                  }
+                }),
+          )
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     double screen_height = MediaQuery.of(context).size.height;
     double screen_widht = MediaQuery.of(context).size.width;
-
+    idQuestion = getQuestion();
     return Scaffold(
       appBar: AppBar(
         title: Text("Quiz Game"),
@@ -101,52 +130,88 @@ class _GameState extends State<Game> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
+
+            //Question
             Container(
-              child: Text(questions[number_question].getQuestion.toString()),
+              child: Text(questions[idQuestion].getQuestion.toString(), 
+              style: TextStyle(
+                fontSize: 30
+              ),),
               padding: EdgeInsets.all(40),
-              decoration: BoxDecoration(
+             /* decoration: BoxDecoration(
                   border: Border.all(width: 5.0),
-                  borderRadius: BorderRadius.all(Radius.circular(15))),
+                  borderRadius: BorderRadius.all(Radius.circular(15))),*/
             ),
             // SizedBox(height:100,),
-            Container(
-              //: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(initialButtonColor),
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15))))),
-                      onPressed: () {
-                        answerChecker(questions[number_question].option_one,
-                            questions[number_question].correct_answer) ? initialButtonColor=Colors.greenAccent : initialButtonColor= Colors.red;
 
-                       
-                      },
-                      child: Text(questions[number_question].option_one)),
-                  ElevatedButton(
-                      style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15))))),
-                      onPressed: () {},
-                      child: Text(questions[number_question].option_two)),
-                  ElevatedButton(
-                      style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15))))),
-                      onPressed: () {},
-                      child: Text(questions[number_question].option_three)),
-                ],
-              ),
-            )
+            //First answer
+            ElevatedButton(
+              child: Text(questions[idQuestion].option_one),
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(initialButtonColor),
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))))),
+              onPressed: () {
+                if (number_question < questions.length - 1) {
+                  bool checker;
+                  checker = answerChecker(questions[idQuestion].option_one,
+                      questions[idQuestion].correct_answer);
+
+                  setState(() {
+                    checker
+                        ? initialButtonColor = Colors.greenAccent
+                        : initialButtonColor = Colors.red;
+                  });
+
+                  openDialog(checker);
+                  initialButtonColor = Colors.blue;
+                }
+              },
+            ),
+
+            //Second Option
+            ElevatedButton(
+              child: Text(questions[idQuestion].option_two),
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))))),
+              onPressed: () {
+                if (number_question < questions.length - 1) {
+                  bool checker;
+                  checker = answerChecker(questions[idQuestion].option_two,
+                      questions[idQuestion].correct_answer);
+                  setState(() {
+                    checker
+                        ? initialButtonColor = Colors.greenAccent
+                        : initialButtonColor = Colors.red;
+                  });
+                  openDialog(checker);
+                  initialButtonColor = Colors.blue;
+                }
+              },
+            ),
+            //Third Option
+            ElevatedButton(
+              child: Text(questions[idQuestion].option_three),
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))))),
+              onPressed: () {
+                if (number_question < questions.length - 1) {
+                  bool checker;
+                  checker = answerChecker(questions[idQuestion].option_three,
+                      questions[idQuestion].correct_answer);
+                  setState(() {
+                    checker
+                        ? initialButtonColor = Colors.greenAccent
+                        : initialButtonColor = Colors.red;
+                  });
+                  openDialog(checker);
+                  initialButtonColor = Colors.blue;
+                }
+              },
+            ),
           ],
         ),
       ),

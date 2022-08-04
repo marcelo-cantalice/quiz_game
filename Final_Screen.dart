@@ -44,7 +44,7 @@ class _Final_ScreenState extends State<Final_Screen> {
                   );
                 },
                 child: Text(
-                  "LET'S START!",
+                  "Play Again!",
                   style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                 )),
           ],
