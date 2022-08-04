@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:quiz_game/Game.dart';
 import 'Question.dart';
 
 class Home extends StatefulWidget {
@@ -34,33 +35,24 @@ class _HomeState extends State<Home> {
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.max,
           children: [
-            Text("Question Nº " +
-                (number_question + 1).toString() +
-                "/" +
-                questions.length.toString()),
-            Text(questions[number_question].getQuestion.toString()),
+            Text(
+              "Welcome to QUIZ GAME! ",
+              style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+            ),
             ElevatedButton(
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(15))))),
                 onPressed: () {
-                  answerChecker(questions[number_question].option_one,
-                      questions[number_question].correct_answer);
-
-                  setState(() {
-                    print(number_question.toString() + "---");
-                    if (number_question < questions.length - 1) {
-                      number_question++;
-                    } else {
-                      print("Last Question");
-                    }
-                  });
+                  Navigator.pushNamed(context, '/game');
                 },
-                child: Text(questions[number_question].option_one)),
-            ElevatedButton(
-                onPressed: () {},
-                child: Text(questions[number_question].option_two)),
-            ElevatedButton(
-                onPressed: () {},
-                child: Text(questions[number_question].option_three))
+                child: Text(
+                  "LET'S START!",
+                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                )),
           ],
         ),
       ),

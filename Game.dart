@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'Final_Screen.dart';
 import 'Question.dart';
 
 class Game extends StatefulWidget {
@@ -13,57 +14,139 @@ class Game extends StatefulWidget {
 class _GameState extends State<Game> {
   int number_question = 0;
   List<Question> questions = [
-    Question("Question1", "Option1", "Option2", "Option3", "Option1"),
-    Question("Question2", "Option1", "Option2", "Option3", "correct"),
-    Question("Question3", "Option1", "Option2", "Option3", "correct"),
+    Question("How many legs does the Legs of Man have?", "One", "Three", "Four",
+        "Three"),
+    Question(
+        "How many tails does a Manx cat have? ", "None", "One", "Two", "None"),
+    Question("How many teeth does an aardvark have? ", "None", "Ten",
+        "Fifeteen", "None"),
+    Question("Which sea creature has three hearts?", "Shark", "Jellyfish",
+        "Octopus", "Octopus"),
+    Question("Which instrument has forty-seven strings and seven pedals?",
+        "Drum", "Accordion", "Harp", "Harp"),
+    Question("Whose face was said to have launched 1,000 ships?",
+        "Helen of Troy", "Leonidas of Sparta", "Cleopatra", "Helen of Troy"),
+    Question("In the traditional rhyme, how many mice were blind?", "Two",
+        "Three", "Five", "Three"),
+    Question("How many bones does an adult human have?", "Two hundred and six",
+        "Two hundred", "Two hundred and ten", "Two hundred and six"),
+    Question("How many pedals do most modern pianos have?", "None", "One",
+        "Three", "Three"),
+    Question("Water boils at 212 degrees on which temperature scale?",
+        "Celsius", "Fahrenheit", "Kelvin", "Fahrenheit"),
   ];
+  int correct_questions = 0;
+  Color initialButtonColor= Colors.blue;
 
   //Analyze if the answer is correct
-  answerChecker(player_answer, correct_answer) {
+  bool answerChecker(player_answer, correct_answer) {
     questions[number_question].question_answered = true;
     if (player_answer == correct_answer) {
+      correct_questions++;
       //change answer background(red for incorrect or green for correct)
       //Allow to go to the next question
+      return true;
+    }else{
+      return false;
     }
+  }
+
+  //Go to next question
+  nextQuestion(){
+    /*
+     setState(() {
+                          if (number_question < questions.length - 1) {
+                            print(number_question.toString() + "---");
+                            number_question++;
+                          } else if (number_question == questions.length - 1) {
+                            print("Don't have more questoins");
+
+                            //Open final window
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Final_Screen(
+                                        correct_answers:
+                                            correct_questions.toString(),
+                                        length_question:
+                                            questions.length.toString(),
+                                      )),
+                            );
+                          }
+                        });
+     */
   }
 
   @override
   Widget build(BuildContext context) {
+    double screen_height = MediaQuery.of(context).size.height;
+    double screen_widht = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Quiz Game"),
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.max,
           children: [
-            Text("Question Nº " +
-                (number_question + 1).toString() +
-                "/" +
-                questions.length.toString()),
-            Text(questions[number_question].getQuestion.toString()),
-            ElevatedButton(
-                onPressed: () {
-                  answerChecker(questions[number_question].option_one,
-                      questions[number_question].correct_answer);
+            Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Text(
+                "Question Nº " +
+                    (number_question + 1).toString() +
+                    "/" +
+                    questions.length.toString(),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Container(
+              child: Text(questions[number_question].getQuestion.toString()),
+              padding: EdgeInsets.all(40),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 5.0),
+                  borderRadius: BorderRadius.all(Radius.circular(15))),
+            ),
+            // SizedBox(height:100,),
+            Container(
+              //: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(initialButtonColor),
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15))))),
+                      onPressed: () {
+                        answerChecker(questions[number_question].option_one,
+                            questions[number_question].correct_answer) ? initialButtonColor=Colors.greenAccent : initialButtonColor= Colors.red;
 
-                  setState(() {
-                    if (number_question < questions.length - 1) {
-                      print(number_question.toString() + "---");
-                      number_question++;
-                      
-                    } else if (number_question == questions.length - 1) {
-                      print("Don't have more questoins");
-                      //Open final window
-                    }
-                  });
-                },
-                child: Text(questions[number_question].option_one)),
-            ElevatedButton(
-                onPressed: () {},
-                child: Text(questions[number_question].option_two)),
-            ElevatedButton(
-                onPressed: () {},
-                child: Text(questions[number_question].option_three))
+                       
+                      },
+                      child: Text(questions[number_question].option_one)),
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15))))),
+                      onPressed: () {},
+                      child: Text(questions[number_question].option_two)),
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15))))),
+                      onPressed: () {},
+                      child: Text(questions[number_question].option_three)),
+                ],
+              ),
+            )
           ],
         ),
       ),
