@@ -40,7 +40,7 @@ class _HomeState extends State<Home> {
           children: [
             Text(
               "Welcome to QUIZ GAME! ",
-              style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
             ElevatedButton(
                 style: ButtonStyle(

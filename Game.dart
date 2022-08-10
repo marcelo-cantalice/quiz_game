@@ -47,10 +47,12 @@ class _GameState extends State<Game> {
     number_question++;
     if (player_answer == correct_answer) {
       correct_questions++;
+      MaterialStateProperty.all(Colors.green);
 
       //Allow to go to the next question
       return true;
     } else {
+      MaterialStateProperty.all(Colors.red);
       return false;
     }
   }
@@ -133,12 +135,12 @@ class _GameState extends State<Game> {
 
             //Question
             Container(
-              child: Text(questions[idQuestion].getQuestion.toString(), 
-              style: TextStyle(
-                fontSize: 30
-              ),),
+              child: Text(
+                questions[idQuestion].getQuestion.toString(),
+                style: TextStyle(fontSize: 30),
+              ),
               padding: EdgeInsets.all(40),
-             /* decoration: BoxDecoration(
+              /* decoration: BoxDecoration(
                   border: Border.all(width: 5.0),
                   borderRadius: BorderRadius.all(Radius.circular(15))),*/
             ),
@@ -157,15 +159,7 @@ class _GameState extends State<Game> {
                   bool checker;
                   checker = answerChecker(questions[idQuestion].option_one,
                       questions[idQuestion].correct_answer);
-
-                  setState(() {
-                    checker
-                        ? initialButtonColor = Colors.greenAccent
-                        : initialButtonColor = Colors.red;
-                  });
-
                   openDialog(checker);
-                  initialButtonColor = Colors.blue;
                 }
               },
             ),
@@ -181,13 +175,7 @@ class _GameState extends State<Game> {
                   bool checker;
                   checker = answerChecker(questions[idQuestion].option_two,
                       questions[idQuestion].correct_answer);
-                  setState(() {
-                    checker
-                        ? initialButtonColor = Colors.greenAccent
-                        : initialButtonColor = Colors.red;
-                  });
-                  openDialog(checker);
-                  initialButtonColor = Colors.blue;
+                openDialog(checker);
                 }
               },
             ),
@@ -202,13 +190,7 @@ class _GameState extends State<Game> {
                   bool checker;
                   checker = answerChecker(questions[idQuestion].option_three,
                       questions[idQuestion].correct_answer);
-                  setState(() {
-                    checker
-                        ? initialButtonColor = Colors.greenAccent
-                        : initialButtonColor = Colors.red;
-                  });
-                  openDialog(checker);
-                  initialButtonColor = Colors.blue;
+                 openDialog(checker);
                 }
               },
             ),
