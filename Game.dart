@@ -39,7 +39,6 @@ class _GameState extends State<Game> {
         "Celsius", "Fahrenheit", "Kelvin", "Fahrenheit"),
   ];
   int correct_questions = 0;
-  Color initialButtonColor = Colors.blue;
 
   //Analyze if the answer is correct
   bool answerChecker(player_answer, correct_answer) {
@@ -57,7 +56,7 @@ class _GameState extends State<Game> {
     }
   }
 
-  //Go to next question
+  //Generate a random idQuestion
   int getQuestion() {
     Random random = new Random();
     int value = random.nextInt(questions.length);
@@ -73,7 +72,7 @@ class _GameState extends State<Game> {
       context: context,
       builder: (BuildContext context) => AlertDialog(
         title: Center(
-            child: checker ? Text('You' 're right!') : Text('You' 're wrong!')),
+            child: checker ? Text("You're right!") : Text("You're wrong!")),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(15))),
         actions: <Widget>[
@@ -140,9 +139,6 @@ class _GameState extends State<Game> {
                 style: TextStyle(fontSize: 30),
               ),
               padding: EdgeInsets.all(40),
-              /* decoration: BoxDecoration(
-                  border: Border.all(width: 5.0),
-                  borderRadius: BorderRadius.all(Radius.circular(15))),*/
             ),
             // SizedBox(height:100,),
 
@@ -150,8 +146,6 @@ class _GameState extends State<Game> {
             ElevatedButton(
               child: Text(questions[idQuestion].option_one),
               style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(initialButtonColor),
                   shape: MaterialStateProperty.all(RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15))))),
               onPressed: () {
@@ -175,10 +169,11 @@ class _GameState extends State<Game> {
                   bool checker;
                   checker = answerChecker(questions[idQuestion].option_two,
                       questions[idQuestion].correct_answer);
-                openDialog(checker);
+                  openDialog(checker);
                 }
               },
             ),
+            
             //Third Option
             ElevatedButton(
               child: Text(questions[idQuestion].option_three),
@@ -190,7 +185,7 @@ class _GameState extends State<Game> {
                   bool checker;
                   checker = answerChecker(questions[idQuestion].option_three,
                       questions[idQuestion].correct_answer);
-                 openDialog(checker);
+                  openDialog(checker);
                 }
               },
             ),

@@ -12,21 +12,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int number_question = 0;
-  List<Question> questions = [
-    Question("Question1", "Option1", "Option2", "Option3", "Option1"),
-    Question("Question2", "Option1", "Option2", "Option3", "correct"),
-    Question("Question3", "Option1", "Option2", "Option3", "correct"),
-  ];
-
-  //Analyze if the answer is correct
-  answerChecker(player_answer, correct_answer) {
-    if (player_answer == correct_answer) {
-      //change answer background(red for incorrect or green for correct)
-      //Allow to go to the next question
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
